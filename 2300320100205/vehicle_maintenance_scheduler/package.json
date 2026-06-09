@@ -1,0 +1,13 @@
+{
+  "name": "vehicle_maintenance_scheduler",
+  "version": "1.0.0",
+  "description": "Vehicle maintenance scheduler using dynamic programming",
+  "main": "solution.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node solution.js"
+  },
+  "dependencies": {
+    "axios": "^1.17.0"
+  }
+}
