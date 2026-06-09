@@ -21,6 +21,13 @@ async function main() {
         "db",
         "Critical database connection failure."
     );
+
+    await Log(
+        "frontend",
+        "warn",
+        "middleware",
+        "Slow response from backend API."
+    );
 }
 
 main();

@@ -27,6 +27,10 @@ const VALID_PACKAGES = [
     "utils"
 ];
 
+function isValidText(value) {
+    return typeof value === "string" && value.trim().length > 0;
+}
+
 async function Log(stack, level, packageName, message) {
     try {
         if (!VALID_STACKS.includes(stack)) {
@@ -38,9 +42,19 @@ async function Log(stack, level, packageName, message) {
         }
 
         if (!VALID_PACKAGES.includes(packageName)) {
-            throw new Error("Invalid package");
+            throw new Error("Invalid package name");
         }
-       console.log(process.env.TOKEN);
+
+        if (!isValidText(message)) {
+            throw new Error("Invalid message");
+        }
+
+        const token = process.env.TOKEN || process.env.BEARER_TOKEN;
+
+        if (!token) {
+            throw new Error("Missing bearer token");
+        }
+
         const response = await axios.post(
             "http://4.224.186.213/evaluation-service/logs",
             {
@@ -51,14 +65,11 @@ async function Log(stack, level, packageName, message) {
             },
             {
                 headers: {
-                    Authorization: `Bearer ${process.env.TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
                 }
             }
         );
-
-        console.log("Log created successfully");
-        console.log(response.data);
 
         return response.data;
     } catch (error) {
@@ -66,6 +77,11 @@ async function Log(stack, level, packageName, message) {
             "Logging failed:",
             error.response?.data || error.message
         );
+
+        return {
+            success: false,
+            error: error.response?.data || error.message
+        };
     }
 }
 
